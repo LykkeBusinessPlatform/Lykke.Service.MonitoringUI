@@ -1,0 +1,77 @@
+﻿@using System.Linq
+@using Common
+@model Lykke.Service.MonitoringUI.Models.SrvMonitoringDataViewModel
+@{
+    var dt = DateTime.UtcNow;
+}
+<table class="table table-striped">
+    <tr>
+        <th>Service</th>
+        <th>URL</th>
+        <th>Last time</th>
+        <th>Version</th>
+        <th></th>
+    </tr>
+    <tr>
+        <td>
+            <h5><b>Information from new MonitoringService</b></h5>
+        </td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    @if (Model.MonitoringServiceRecords.Count() != 0)
+    {
+        @foreach (var itm in Model.MonitoringServiceRecords)
+        {
+            <tr>
+                <td title="@itm.Url">
+                    @itm.ServiceName
+                </td>
+                <td>
+                    @itm.Url
+                </td>
+                <td>
+                    @if (itm.SkipUntil.HasValue && itm.SkipUntil.Value > dt)
+                    {
+                        <b style="color: black">Muted for @(string.Format("{0:0.00}", (itm.SkipUntil.Value - dt).TotalMinutes)) minutes</b>
+                    }
+                    else if ((dt - itm.DateTime).TotalSeconds > 60)
+                    {
+                        <b style="color: red">@itm.DateTime.ToIsoDateTime()</b>
+                    }
+                    else
+                    {
+                        <b style="color: darkgreen">@itm.DateTime.ToIsoDateTime()</b>
+                    }
+                </td>
+                <td>
+                    @itm.Version
+                </td>
+                <td>
+                    <button class="btn btn-success btn-xs" onclick="ui.showDialog('@Url.Action("UnMuteMonitorDialog")', { serviceName:'@itm.ServiceName' });">
+                        <span class="glyphicon glyphicon-volume-up" aria-hidden="true"></span>
+                    </button>
+                    <button class="btn btn-warning btn-xs" onclick="ui.showDialog('@Url.Action("MuteMonitorDialog")', { serviceName:'@itm.ServiceName' });">
+                        <span class="glyphicon glyphicon-volume-off" aria-hidden="true"></span>
+                    </button>
+                    <button class="btn btn-danger btn-xs" onclick="ui.showDialog('@Url.Action("RemoveMonitorDialog")', { serviceName:'@itm.ServiceName' });">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    </button>
+                </td>
+            </tr>
+        }
+    }
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td colspan="4">
+            <button class="btn btn-warning btn-xs"
+                    onclick="ui.showDialog('@Url.Action("AddMonitorDialog")');">
+                <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+            </button>
+        </td>
+    </tr>
+</table>

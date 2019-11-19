@@ -1,0 +1,27 @@
+﻿@using Lykke.Service.MonitoringUI
+@using Microsoft.AspNetCore.Html
+
+@model SaveCancelButtonPairModel
+
+@{
+    var onFinishCode = Model.OnFinish == null ? "" : ", onFinish: " + @Model.OnFinish;
+    var validationCode = Model.OnValidate == null ? "" : $"if (!{Model.OnValidate}) return false; ";
+    var onResultRenderFinish = Model.OnResultRenderFinish == null ? "" : ", onResultRenderFinish: " + @Model.OnResultRenderFinish;
+    var onSuccess = Model.OnSuccess ?? "undefined";
+    var onError = Model.OnError ?? "undefined";
+    var callback = Model.Callback ?? "undefined";
+}
+
+@{
+    HtmlString buttonIdCode = new HtmlString(Model.SaveButtonId == null ? "" : $"id='{Model.SaveButtonId}'");
+}
+
+<div style="text-align: center;">
+    <div class="btn-group" style="margin-top: 10px;">
+        <button @buttonIdCode class="btn btn-success" style="width: 150px" onclick="@validationCode Requests.doRequest({ url: '@Model.Url', formId: '@Model.FormId' @onFinishCode @onResultRenderFinish, showLoading: true, onSuccess: @onSuccess, onError: @onError, callBack: @callback });">
+            <span class="glyphicon glyphicon-floppy-disk hideOnRequest" aria-hidden="true"></span>
+            <img class="showOnRequest" src="~/images/processing.gif" style="display: none"/> @(Model.SavePhrase ?? "Save")
+        </button>
+        <button class="btn btn-default" style="width: 150px" onclick="ui.hideDialog()"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>Cancel</button>
+    </div>
+</div>

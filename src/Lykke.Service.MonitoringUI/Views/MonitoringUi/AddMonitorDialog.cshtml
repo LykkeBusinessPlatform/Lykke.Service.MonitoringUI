@@ -1,0 +1,15 @@
+﻿@using Lykke.Service.MonitoringUI
+@{
+    Layout = "~/Views/Shared/_PersonalAreaDialog.cshtml";
+}
+<form id="frmMute">
+    <table style="width:100%">
+        <tr>
+            <td>
+                @Html.RenderInputWithLabelOnTop("ServiceName", "Service Name", "")
+                @Html.RenderInputWithLabelOnTop("Url", "Url", "", placeHolder: "http://internal_ip:port/api/IsAlive")
+            </td>
+        </tr>
+    </table>
+</form>
+@Html.RenderSaveCancelButtonPair(Url.Action("AddMonitor"), "#frmMute", "Add")

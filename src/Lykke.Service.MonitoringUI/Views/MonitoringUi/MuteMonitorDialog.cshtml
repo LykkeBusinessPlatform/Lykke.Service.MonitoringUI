@@ -1,0 +1,31 @@
+﻿@using Lykke.Service.MonitoringUI
+@using Microsoft.AspNetCore.Html
+@model Lykke.Service.MonitoringUI.Models.MuteMonitorDialogViewModel
+@{
+    Layout = "~/Views/Shared/_PersonalAreaDialog.cshtml";
+}
+@functions
+{
+public IHtmlContent GetStrOrEmptyAttr(string attr, string value)
+{
+    if (value == null)
+        return HtmlString.Empty;
+    return new HtmlString(string.Format("{0}=\"{1}\"", attr, value));
+}
+}
+<form id="frmMute">
+    <table style="width:100%">
+        <tr>
+            <td>
+                @Html.RenderInputWithLabelOnTop("ServiceName", "Service Name", Model.ServiceName)
+                <div class="form-group">
+                    <label class="control-label" for="">"Minutes"</label>
+                    <input id="" @GetStrOrEmptyAttr("type", "number") @GetStrOrEmptyAttr("value", Model.Minutes.ToString())
+                           name="@nameof(Model.Minutes)"
+                           class="form-control input-lg" @GetStrOrEmptyAttr("placeholder", nameof(Model.Minutes)) />
+                </div>
+            </td>
+        </tr>
+    </table>
+</form>
+@Html.RenderSaveCancelButtonPair(Url.Action("MuteMonitor"), "#frmMute", "Mute")

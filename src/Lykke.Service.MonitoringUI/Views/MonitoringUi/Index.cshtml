@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Monitoring UI</title>
+</head>
+<body>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<script src="~/js/ui.js" asp-append-version="true"></script>
+<script src="~/js/requests.js" asp-append-version="true"></script>
+<script src="~/js/layout.js" asp-append-version="true"></script>
+<script>
+    var Ui = new UiDesktop();
+    ui = Ui;
+    Requests.ui = Ui;
+    layout.ui = Ui;
+    Requests.pageManager = layout;
+    ui.pageManager = layout;
+    $(window).resize(function () { layout.ressize(); });
+</script>
+
+<div id="theResult">
+    <script>
+        var refreshing = false;
+
+        function refresh() {
+
+            if (refreshing)
+                return;
+
+            refreshing = true;
+
+            $.ajax({
+                    url: '@Url.Action("GetData")',
+                    type: "POST"
+                })
+                .then(function(result) {
+                    refreshing = false;
+                    $('#theResult').html(result);
+                })
+                .fail(function() {
+                    $('#theResult').html("<h1>Invalid connection</h1>");
+                    refreshing = false;
+                });
+
+        }
+
+        window.setInterval(refresh, 5000);
+
+        refresh();
+    </script>
+
+</div>
+
+<div id="modalBackground" style="margin:auto; z-index: 100; display: none; overflow-y: auto; background: rgba(0, 0, 0, 0.53);position: fixed;top: 0;left: 0;" data-autoheight="0" data-autowidth="0" 
+     onclick="Ui.hideDialog()">
+    <table style="width: 100%; height: 100%;">
+        <tr>
+            <td id="modalData" style="width: 100%; height: 100%"></td>
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>
