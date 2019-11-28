@@ -55,8 +55,8 @@ var Requests = (function () {
             }
         }
         var options = o.formData
-            ? { url: o.url, type: 'POST', data: o.params, headers: { 'RequestVerificationToken': getAntiForgeryCookie() }, processData: false, contentType: false }
-            : { url: o.url, type: 'POST', data: o.params, headers: { 'RequestVerificationToken': getAntiForgeryCookie() } };
+            ? { url: o.url, type: 'POST', data: o.params, processData: false, contentType: false }
+            : { url: o.url, type: 'POST', data: o.params };
         $.ajax(options)
             .then(function (result, statusText, jqXHR) {
             if (o.onHideLoading)
